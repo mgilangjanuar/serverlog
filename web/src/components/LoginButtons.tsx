@@ -1,10 +1,16 @@
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
-import { Button, Typography } from 'antd'
-import React from 'react'
-import { useAuthUrls } from '../hooks/auth/useAuthUrls'
+import { Button, Spin, Typography } from 'antd'
+import React, { useEffect } from 'react'
+import useSWR from 'swr'
+import { fetcher } from '../utils/Fetcher'
 
 const LoginButtons: React.FC = () => {
-  const { data } = useAuthUrls()
+  const { data, error } = useSWR('/api/v1/auth/urls', fetcher)
+  const { data: user } = useSWR('/api/v1/auth/me', fetcher)
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
 
   const login = (provider: string) => {
     if (data) {
@@ -12,12 +18,14 @@ const LoginButtons: React.FC = () => {
     }
   }
   return <div>
-    <Typography.Paragraph style={{ textAlign: 'center' }}>
-      <Button onClick={() => login('google')} type="primary" style={{ padding: '0 40px' }} icon={<GoogleOutlined />}>Sign in with Google</Button>
-    </Typography.Paragraph>
-    <Typography.Paragraph style={{ textAlign: 'center' }}>
-      <Button onClick={() => login('github')} style={{ background: '#000', color: '#fff', padding: '0 40px' }} icon={<GithubOutlined />}>Sign in with GitHub</Button>
-    </Typography.Paragraph>
+    <Spin spinning={!data && !error}>
+      <Typography.Paragraph style={{ textAlign: 'center' }}>
+        <Button onClick={() => login('google')} type="primary" style={{ padding: '0 40px' }} icon={<GoogleOutlined />}>Sign in with Google</Button>
+      </Typography.Paragraph>
+      <Typography.Paragraph style={{ textAlign: 'center' }}>
+        <Button onClick={() => login('github')} style={{ background: '#000', color: '#fff', padding: '0 40px' }} icon={<GithubOutlined />}>Sign in with GitHub</Button>
+      </Typography.Paragraph>
+    </Spin>
   </div>
 }
 

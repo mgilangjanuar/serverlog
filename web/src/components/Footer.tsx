@@ -1,4 +1,4 @@
-import { GithubFilled, HeartFilled } from '@ant-design/icons'
+import { GithubFilled } from '@ant-design/icons'
 import { Divider, Layout, Space, Typography } from 'antd'
 import React from 'react'
 import { Link } from 'react-router-dom'
@@ -15,12 +15,10 @@ const Footer: React.FC = () => {
         <a href="https://github.com/mgilangjanuar/serverlog"><GithubFilled /> GitHub</a>
       </Typography.Text>
     </Typography.Paragraph>
-    <br />
-    <Space direction="vertical">
+    <Space>
       <a href="https://vercel.com?utm_source=restfire-studio&utm_campaign=oss">
         <img style={{ width: '100%', maxWidth: '160px' }} src="https://www.datocms-assets.com/31049/1618983297-powered-by-vercel.svg" alt="Powered by Vercel" />
       </a>
-      <Typography.Text type="danger"><HeartFilled /></Typography.Text>
       <a href="https://supabase.io">
         <img style={{ width: '100%', maxWidth: '160px' }} src="https://supabase.io/new/images/logo-light.png" />
       </a>

@@ -17,4 +17,18 @@ export class Auth {
   public async me(req: Request, res: Response): Promise<any> {
     return res.send({ user: req.user })
   }
+
+  @Endpoint.POST()
+  public async refreshToken(req: Request, res: Response): Promise<any> {
+    const { refreshToken } = req.body
+    if (!refreshToken) {
+      throw { status: 400, body: { error: 'refreshToken is required in body' } }
+    }
+
+    const { error, data } = await Supabase.build().auth.api.refreshAccessToken(req.body.refreshToken)
+    if (error) {
+      throw { status: 401, body: { error: error.message, details: error } }
+    }
+    return res.send(data)
+  }
 }

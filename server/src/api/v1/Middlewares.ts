@@ -31,6 +31,9 @@ export function GetApplication(): RequestHandler {
   return async (req: Request, _: Response, next: NextFunction) => {
     if (req.params.applicationId) {
       const { data: application } = await Supabase.build().from<Applications>('applications').select('*').eq('id', req.params.applicationId).single()
+      if (!application) {
+        throw { status: 403, body: { error: 'Forbidden' } }
+      }
       req.application = application
     }
     return next()
