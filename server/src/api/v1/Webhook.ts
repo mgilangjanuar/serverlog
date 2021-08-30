@@ -1,4 +1,4 @@
-import { AES } from 'crypto-js'
+import { AES, enc } from 'crypto-js'
 import { Request, Response } from 'express'
 import { Logs } from '../../model/Logs'
 import { Supabase } from '../../service/Supabase'
@@ -14,10 +14,13 @@ export class Webhook {
     if (!data) {
       throw { status: 400, body: { error: 'log_data is required' } }
     }
+
+    const applicationId = AES.decrypt(req.params.applicationId, Buffer.from(process.env.SECRET).toString('base64')).toString(enc.Utf8)
+
     await Supabase.build().from<Logs>('logs').insert([{
-      application_id: req.params.applicationId,
+      application_id: applicationId,
       type,
-      log_data: AES.encrypt(data, generateSecret(req.params.applicationId)).toString()
+      log_data: AES.encrypt(data, generateSecret(applicationId)).toString()
     }])
     return res.send({ success: true })
   }

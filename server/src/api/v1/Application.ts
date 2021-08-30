@@ -4,6 +4,7 @@ import { Supabase } from '../../service/Supabase'
 import { filterQuery } from '../../utils/FilterQuery'
 import { Endpoint } from '../base/Endpoint'
 import { JWTAuth } from './Middlewares'
+import { AES } from 'crypto-js'
 
 @Endpoint.API('/applications')
 export class Application {
@@ -53,7 +54,8 @@ export class Application {
     if (!application) {
       throw { status: 404, body: { error: 'Application not found' } }
     }
-    return res.send({ application })
+    return res.send({ application,
+      key: AES.encrypt(application.id, Buffer.from(process.env.SECRET).toString('base64')).toString() })
   }
 
   @Endpoint.DELETE('/:id', { middlewares: [JWTAuth()] })
