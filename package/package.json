@@ -1,9 +1,9 @@
 {
-  "name": "serverlog",
+  "name": "serverlogjs",
   "version": "0.1.0",
   "main": "./dist/index.js",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "nodemon dist/index.js --watch",
     "build": "rimraf dist && eslint --fix -c .eslintrc.js --ext .ts . && tsc"
