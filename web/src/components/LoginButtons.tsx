@@ -1,15 +1,19 @@
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
 import { Button, Spin, Typography } from 'antd'
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
 import { fetcher } from '../utils/Fetcher'
 
 const LoginButtons: React.FC = () => {
-  const { data, error } = useSWR('/api/v1/auth/urls', fetcher)
-  const { data: user } = useSWR('/api/v1/auth/me', fetcher)
+  const history = useHistory()
+  const { data, error } = useSWR('/auth/urls', fetcher)
+  const { data: user } = useSWR('/auth/me', fetcher)
 
   useEffect(() => {
-    console.log(user)
+    if (user) {
+      history.replace('/dashboard')
+    }
   }, [user])
 
   const login = (provider: string) => {

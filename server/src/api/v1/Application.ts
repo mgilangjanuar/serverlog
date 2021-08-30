@@ -23,6 +23,10 @@ export class Application {
     if (!data) {
       throw { status: 400, body: { error: '`application` in body is required' } }
     }
+    if ((await Supabase.build().from<Applications>('applications').select('id').contains('uids', [req.user.id])).count > 10) {
+      throw { status: 400, body: { error: 'You reach the limit' } }
+    }
+
     const { data: application } = await Supabase.build().from<Applications>('applications').insert([
       {
         ...data,

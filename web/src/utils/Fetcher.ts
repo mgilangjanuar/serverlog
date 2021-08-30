@@ -2,7 +2,7 @@ import axios from 'axios'
 import JSCookie from 'js-cookie'
 
 export const fetcher = (url: string): Promise<any> => {
-  const request = () => axios.get(`${process.env.REACT_APP_API_URL || ''}${url}`, { withCredentials: true })
+  const request = () => axios.get(`${process.env.REACT_APP_API_URL || ''}/api/v1${url}`, { withCredentials: true })
     .then(({ data }) => data)
 
   return request()

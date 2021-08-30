@@ -17,6 +17,7 @@ export class Webhook {
 
     const applicationId = AES.decrypt(req.params.applicationId, Buffer.from(process.env.SECRET).toString('base64')).toString(enc.Utf8)
 
+    await Supabase.build().from<Logs>('logs').delete().lt('created_at', new Date(new Date().getTime() - 172_800_000))
     await Supabase.build().from<Logs>('logs').insert([{
       application_id: applicationId,
       type,
