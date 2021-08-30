@@ -21,10 +21,10 @@ const Dashboard: React.FC<PageProps> = ({ match }) => {
   }, [history, user])
 
   return <>
-    <Navbar />
+    <Navbar user={user?.user} />
     <Layout style={{ flexDirection: 'row' }}>
       <Layout.Content style={{ padding: '10px 10px 24px', margin: 0, minHeight: 280 }}>
-        {!match.params.page || match.params.page === 'main' ? <Main user={user} /> : ''}
+        {!match.params.page || match.params.page === 'main' ? <Main user={user?.user} /> : ''}
         {/* {match.params.page === 'post' ? <Post user={user} /> : ''}
         {match.params.page === 'profile' ? <Profile user={user} /> : ''} */}
       </Layout.Content>

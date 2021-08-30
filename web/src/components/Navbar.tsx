@@ -1,21 +1,25 @@
-import { LeftOutlined } from '@ant-design/icons'
-import { Layout } from 'antd'
+import { CopyOutlined } from '@ant-design/icons'
+import { Layout, message } from 'antd'
+import { write } from 'clipboardy'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 
 interface Props {
-  back?: boolean,
-  title?: string
+  user?: any
 }
 
-const Navbar: React.FC<Props> = ({ back, title }) => {
-  const history = useHistory()
-
+const Navbar: React.FC<Props> = ({ user }) => {
+  const copyUuid = () => {
+    write(user?.id)
+    message.info('copied')
+  }
   return <>
-    <Layout.Header style={{ ...title || back ? { padding: '0 15px' } : {} }}>
-      <div style={{ cursor: 'pointer' }} onClick={e => back ? history.goBack() : e.preventDefault()} className="logo">
-        {back ? <><LeftOutlined /> Back</> : title || 'server.log()'}
+    <Layout.Header>
+      <div style={{ cursor: 'pointer' }} onClick={e => e.preventDefault()} className="logo">
+        server.log()
       </div>
+      {user ? <div style={{ float: 'right' }} className="logo">
+        {user?.id} <CopyOutlined onClick={copyUuid} />
+      </div> : ''}
     </Layout.Header>
   </>
 }
