@@ -15,7 +15,7 @@ import express, {
 import listEndpoints from 'express-list-endpoints'
 import morgan from 'morgan'
 import path from 'path'
-import { API } from './api'
+import { API as V1 } from './api/v1'
 
 const app = express()
 app.use(cors({
@@ -33,7 +33,7 @@ app.use(cookieParser())
 app.use(morgan('tiny'))
 
 app.get('/ping', (_, res) => res.send({ pong: true }))
-app.use('/api', API)
+app.use('/api/v1', V1)
 
 // serve web
 app.use(serveStatic(path.join(__dirname, '..', '..', 'web', 'build')))
