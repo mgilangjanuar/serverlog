@@ -3,6 +3,7 @@ import { Button, Card, Col, Drawer, Empty, Form, Input, message, Popconfirm, Row
 import { useForm } from 'antd/lib/form/Form'
 import Layout from 'antd/lib/layout/layout'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import useSWR, { mutate } from 'swr'
 import { fetcher } from '../../utils/Fetcher'
 
@@ -10,15 +11,18 @@ interface Props {
   user?: any
 }
 
-const Main: React.FC<Props> = () => {
+const Main: React.FC<Props> = ({ user }) => {
   const { data, error } = useSWR('/applications?sort.created_at=desc', fetcher)
   const [app, setApp] = useState<any>()
   const [loading, setLoading] = useState<boolean>()
   const [form] = useForm()
+  const history = useHistory()
 
   useEffect(() => {
     if (app) {
       form.setFieldsValue(app)
+    } else {
+      form.resetFields()
     }
   }, [app])
 
@@ -31,7 +35,6 @@ const Main: React.FC<Props> = () => {
           mutate('/applications?sort.created_at=desc')
           message.success('Saved')
           setApp(false)
-          form.resetFields()
           setLoading(false)
         }).catch(({ response }) => {
           message.error(response?.data?.error || 'Something error')
@@ -43,7 +46,6 @@ const Main: React.FC<Props> = () => {
           mutate('/applications?sort.created_at=desc')
           message.success('Updated')
           setApp(false)
-          form.resetFields()
           setLoading(false)
         }).catch(({ response }) => {
           message.error(response?.data?.error || 'Something error')
@@ -58,16 +60,15 @@ const Main: React.FC<Props> = () => {
         mutate('/applications?sort.created_at=desc')
         message.success('Deleted')
         setApp(false)
-        form.resetFields()
       }).catch(({ response }) => {
         message.error(response?.data?.error || 'Something error')
       })
   }
 
-  return <Row style={{ minHeight: '85vh', padding: '0 0 70px' }}>
+  return <Row style={{ minHeight: '85vh', padding: '70px 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
       <Typography.Paragraph>
-        <Button type="primary" onClick={() => setApp({ id: 'create' })}>Create App</Button>
+        <Button type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
       </Typography.Paragraph>
       {!data && !error ? <div style={{ textAlign: 'center' }}><Spin /></div> : ''}
       {data?.applications && !data.applications.length ? <Empty /> : ''}
@@ -76,7 +77,8 @@ const Main: React.FC<Props> = () => {
           {data?.applications.map((application: any) => <Col key={application.id} lg={8} md={12} span={24}>
             <Card hoverable bodyStyle={{ height: '115px' }} style={{ margin: '5px 0' }} title={<>
               {application.name}<br /><Typography.Text style={{ fontSize: '14px' }} type="secondary">{application.url?.replace(/^https?\:\/\//gi, '') || 'undefined'}</Typography.Text>
-            </>} extra={<Button  type="link" icon={<SettingOutlined />} onClick={() => setApp(application)} />}>
+            </>} extra={<Button  type="link" icon={<SettingOutlined />} onClick={() => setApp(application)} />}
+            actions={[<Button block type="link" onClick={() => history.push(`/dashboard/${application.id}`)}>View Logs</Button>]}>
               <Card.Meta description={<>
                 <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
                   {application.description || 'no description'}
@@ -91,6 +93,9 @@ const Main: React.FC<Props> = () => {
       <Form form={form} onFinish={save} layout="vertical">
         <Form.Item name="id" hidden>
           <Input />
+        </Form.Item>
+        <Form.Item name="key" label="Key">
+          <Input disabled />
         </Form.Item>
         <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the name' }]}>
           <Input />

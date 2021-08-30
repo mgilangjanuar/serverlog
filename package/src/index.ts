@@ -29,7 +29,7 @@ export class ServerLog {
         retryDelay: () => 5_000,
         shouldResetTimeout: true
       })
-      await axios.post(`${this.BASE_URL}/${this.KEY}`, {
+      await axios.post(this.BASE_URL, {
         type,
         log_data: data.map(datum => {
           let result = datum
@@ -38,7 +38,7 @@ export class ServerLog {
           }
           return result
         }).join(' ')
-      })
+      }, { params: { key: this.KEY } })
     }
   }
 }

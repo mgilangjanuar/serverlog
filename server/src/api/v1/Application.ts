@@ -1,20 +1,21 @@
+import { AES } from 'crypto-js'
 import { Request, Response } from 'express'
 import { Applications } from '../../model/Applications'
 import { Supabase } from '../../service/Supabase'
 import { filterQuery } from '../../utils/FilterQuery'
 import { Endpoint } from '../base/Endpoint'
 import { JWTAuth } from './Middlewares'
-import { AES } from 'crypto-js'
 
 @Endpoint.API('/applications')
 export class Application {
 
   @Endpoint.GET('/', { middlewares: [JWTAuth()] })
   public async find(req: Request, res: Response): Promise<any> {
-    const applications = await filterQuery<Applications>(
+    const applications = await filterQuery<Applications[]>(
       Supabase.build().from<Applications>('applications').select('*').contains('uids', [req.user.id]),
       req.query)
-    return res.send({ applications })
+    return res.send({ applications: applications.map(app => ({ ...app,
+      key: encodeURIComponent(AES.encrypt(JSON.stringify(app.id), Buffer.from(process.env.SECRET).toString('base64')).toString()) })) })
   }
 
   @Endpoint.POST('/', { middlewares: [JWTAuth()] })
@@ -61,8 +62,7 @@ export class Application {
     if (!application) {
       throw { status: 404, body: { error: 'Application not found' } }
     }
-    return res.send({ application,
-      key: AES.encrypt(application.id, Buffer.from(process.env.SECRET).toString('base64')).toString() })
+    return res.send({ application })
   }
 
   @Endpoint.DELETE('/:id', { middlewares: [JWTAuth()] })
