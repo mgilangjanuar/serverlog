@@ -1,23 +1,25 @@
+import { Layout } from 'antd'
 import React from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import Home from './pages/Home'
+import NotFound from './pages/errors/NotFound'
+import Terms from './pages/Terms'
+import Privacy from './pages/Privacy'
+
+import 'antd/dist/antd.min.css'
 import './App.css'
 
 function App(): React.ReactElement {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout className="App">
+      <Switch>
+        <Route path="/dashboard" exact><Redirect to="/dashboard/main" /></Route>
+        <Route path="/" exact component={Home} />
+        <Route path="/terms" exact component={Terms} />
+        <Route path="/privacy" exact component={Privacy} />
+        <Route component={NotFound} />
+      </Switch>
+    </Layout>
   )
 }
 
