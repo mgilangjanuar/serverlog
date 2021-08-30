@@ -1,0 +1,16 @@
+{
+  "name": "serverlog",
+  "version": "0.1.0",
+  "main": "server/dist/index.js",
+  "author": "M Gilang Januar <mgilangjanuar@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "web": "yarn workspace web",
+    "server": "yarn workspace server"
+  },
+  "workspaces": [
+    "web",
+    "server"
+  ]
+}

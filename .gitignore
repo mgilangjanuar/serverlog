@@ -1,0 +1,5 @@
+.vs_code/
+node_modules/
+dist/
+build/
+.env
