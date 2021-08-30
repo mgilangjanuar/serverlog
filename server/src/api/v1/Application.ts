@@ -44,7 +44,10 @@ export class Application {
       throw { status: 400, body: { error: '`application` in body is required' } }
     }
 
-    const { data: application } = await Supabase.build().from<Applications>('applications').update(data).eq('id', id).single()
+    const { data: application } = await Supabase.build().from<Applications>('applications').update({
+      ...data,
+      ...data.uids ? { uids: [...new Set(data.uids)].map(uid => uid.toString().trim()) } : {}
+    }).eq('id', id).single()
     if (!application) {
       throw { status: 404, body: { error: 'Application not found' } }
     }

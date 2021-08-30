@@ -1,4 +1,4 @@
-import { SettingOutlined } from '@ant-design/icons'
+import { MinusCircleOutlined, SettingOutlined } from '@ant-design/icons'
 import { Button, Card, Col, Drawer, Empty, Form, Input, message, Popconfirm, Row, Space, Spin, Typography } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import Layout from 'antd/lib/layout/layout'
@@ -100,6 +100,33 @@ const Main: React.FC<Props> = () => {
         </Form.Item>
         <Form.Item name="description" label="Description">
           <Input.TextArea />
+        </Form.Item>
+        <Form.Item label="Users Invitation">
+          <Form.List name="uids" rules={[
+            {
+              validator: async (_, uids) => {
+                if (!uids?.length) {
+                  return Promise.reject(new Error('At least 1 user'))
+                }
+              },
+            },
+          ]}>
+            {(fields, { add, remove }) => <>
+              {fields.map((field, i) => <Row gutter={14} key={i}>
+                <Col span={23}>
+                  <Form.Item {...field} rules={[{ required: true, message: 'ID is required' }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={1}>
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                </Col>
+              </Row>)}
+              <Form.Item>
+                <Button onClick={() => add()}>Add user</Button>
+              </Form.Item>
+            </>}
+          </Form.List>
         </Form.Item>
         <Form.Item style={{ float: 'right' }}>
           <Space>
