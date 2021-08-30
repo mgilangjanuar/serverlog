@@ -18,14 +18,6 @@ export class Auth {
     return res.send({ user: req.user })
   }
 
-  @Endpoint.GET()
-  public async find(req: Request, res: Response): Promise<any> {
-    const data = await Supabase.build().from('users').select('*')
-    console.log(data)
-
-    return res.send()
-  }
-
   @Endpoint.POST()
   public async refreshToken(req: Request, res: Response): Promise<any> {
     const { refreshToken } = req.body

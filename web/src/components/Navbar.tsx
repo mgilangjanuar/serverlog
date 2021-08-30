@@ -1,5 +1,5 @@
 import { CopyOutlined } from '@ant-design/icons'
-import { Layout, message } from 'antd'
+import { Layout, message, Tooltip } from 'antd'
 import { write } from 'clipboardy'
 import React from 'react'
 
@@ -18,7 +18,9 @@ const Navbar: React.FC<Props> = ({ user }) => {
         server.log()
       </div>
       {user ? <div style={{ float: 'right' }} className="logo">
-        {user?.id} <CopyOutlined onClick={copyUuid} />
+        <Tooltip title="You can ask others to invite you to their apps with this ID" placement="bottom">
+          {user?.id} <CopyOutlined onClick={copyUuid} />
+        </Tooltip>
       </div> : ''}
     </Layout.Header>
   </>
