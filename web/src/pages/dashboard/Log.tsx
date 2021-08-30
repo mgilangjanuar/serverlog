@@ -1,6 +1,7 @@
-import { Button, Col, Row, Spin, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Col, List, Row, Typography } from 'antd'
+import moment from 'moment'
 import qs from 'qs'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { fetcher } from '../../utils/Fetcher'
 
@@ -9,7 +10,9 @@ interface Props {
   user?: any
 }
 
-const Log: React.FC<Props> = ({ appId, user }) => {
+const PAGE_SIZE = 2
+
+const Log: React.FC<Props> = ({ appId }) => {
   const [page, setPage] = useState<number>(0)
   const [timeRange, setTimeRange] = useState<number | undefined>(300_000)
   const [param, setParam] = useState<any>()
@@ -18,29 +21,17 @@ const Log: React.FC<Props> = ({ appId, user }) => {
 
   useEffect(() => {
     if (logs?.logs) {
-      setData([...data || [], ...logs.logs])
+      setData([...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs])
     }
   }, [logs])
 
   useEffect(() => {
-    if (timeRange !== undefined) {
-      setParam({
-        size: 2,
-        page,
-        ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
-      })
-    }
-  }, [timeRange])
-
-  useEffect(() => {
-    if (page !== undefined) {
-      setParam({
-        size: 2,
-        page,
-        ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
-      })
-    }
-  }, [page])
+    setParam({
+      size: PAGE_SIZE,
+      page,
+      ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
+    })
+  }, [timeRange, page])
 
   return <Row style={{ minHeight: '85vh', padding: '70px 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
@@ -52,7 +43,16 @@ const Log: React.FC<Props> = ({ appId, user }) => {
         <Button type={timeRange === 7_200_000 ? 'primary' : 'default'} onClick={() => setTimeRange(7_200_000)}>2h</Button>
         <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
       </Typography.Paragraph>
-      {!logs && !error ? <div style={{ textAlign: 'center' }}><Spin /></div> : ''}
+      <List size="small" dataSource={data} renderItem={item => <List.Item>
+        <Typography.Paragraph>
+          <Typography.Text type={item.type === 'error' ? 'danger' : item === 'warn' ? 'warning' : undefined}>
+            [{moment(item.created_at).fromNow()}] {item.log_data}
+          </Typography.Text>
+        </Typography.Paragraph>
+      </List.Item>} />
+      <Typography.Paragraph style={{ textAlign: 'center' }}>
+        <Button disabled={logs?.logs.length < PAGE_SIZE} loading={!logs && !error} onClick={() => setPage(page + 1)}>Load more</Button>
+      </Typography.Paragraph>
     </Col>
   </Row>
 
