@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { Applications } from '../../model/Applications'
-import { Supabase } from '../../Service/Supabase'
+import { Supabase } from '../../service/Supabase'
 
 export function JWTAuth(): RequestHandler {
   return async (req: Request, _: Response, next: NextFunction) => {
