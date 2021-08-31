@@ -29,24 +29,24 @@ const Home: React.FC = () => {
             <Typography.Title type="secondary" level={4} style={{ textAlign: 'center' }}>
               Say goodbye to console.log 👋
             </Typography.Title>
-            <Typography.Title style={{ fontWeight: 200, textAlign: 'center', marginTop: 0 }}>
+            <Typography.Title style={{ fontWeight: 200, textAlign: 'center', marginTop: 0, marginBottom: '50px' }}>
               The Lightweight Debugger Platform
             </Typography.Title>
-            <Carousel style={{ boxShadow: '13px 13px 15px #f0f1f2' }} autoplay dots={false} effect="fade">
+            <Carousel style={{ boxShadow: '13px 13px 15px #f0f1f2', marginBottom: '50px' }} autoplay dots={false} effect="fade">
               <Image style={{ width: '100%' }} src="/Screen Shot 2021-09-01 at 00.19.46.png"/>
               <Image style={{ width: '100%' }} src="/Screen Shot 2021-09-01 at 00.20.11.png"/>
               <Image style={{ width: '100%' }} src="/Screen Shot 2021-09-01 at 00.20.25.png"/>
             </Carousel>
+            <Divider>Login 🚀</Divider>
+            <LoginButtons />
             <Typography.Paragraph style={{ marginTop: '50px' }}>
               Installation
               <pre style={{ overflowX: 'auto', whiteSpace: 'pre' }}>$ npm install serverlogjs@latest -S{'\n\n# with yarn\n'}$ yarn add serverlogjs@latest</pre>
             </Typography.Paragraph>
-            <Typography.Paragraph style={{ marginBottom: '50px' }}>
+            <Typography.Paragraph>
               Usage
               <pre style={{ overflowX: 'auto', whiteSpace: 'pre' }}>import {'{'} ServerLog {'}'} from 'serverlogjs'{'\n\n'}ServerLog.init(APP_KEY){'\n\n'}// your another dirty code here...{'\n\n'}try {'{\n'}  const {'{'} data {'}'} = await axios.get('https://example.com'){'\n'}  ServerLog.log('Response:', data){'\n}'} catch (error) {'{\n'}  ServerLog.error('!ERROR:', error){'\n}'}</pre>
             </Typography.Paragraph>
-            <Divider>Login 🚀</Divider>
-            <LoginButtons />
             <img style={{ width: '100%' }} alt="Code Version Control.svg" src="./Code Version Control.svg" />
             <Typography.Title level={3}>Features</Typography.Title>
             <ul>
@@ -63,6 +63,17 @@ const Home: React.FC = () => {
             </Typography.Paragraph>
           </div>
           <Image src="/Screen Shot 2021-08-31 at 17.06.27.png" alt="Screen Shot 2021-08-31 at 17.06.27.png" style={{ width: '100%' }} />
+          <Divider />
+          <div style={{ padding: '0 10px' }}>
+            <Typography.Title level={3}>Changelogs</Typography.Title>
+            <Typography.Paragraph>v0.1.0 (Sept 1, 2021)</Typography.Paragraph>
+            <ul>
+              <li>First Release</li>
+              <li>Encrypt and decrypt data on store and fetch</li>
+              <li>Invite users to an application</li>
+              <li>Create SDK</li>
+            </ul>
+          </div>
         </Col>
       </Row>
     </Layout.Content>

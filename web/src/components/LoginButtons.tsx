@@ -25,10 +25,10 @@ const LoginButtons: React.FC = () => {
   return <div>
     <Spin spinning={!data && !error}>
       <Typography.Paragraph style={{ textAlign: 'center' }}>
-        <Button onClick={() => login('google')} type="primary" style={{ padding: '0 40px' }} icon={<GoogleOutlined />}>Sign in with Google</Button>
+        <Button onClick={() => login('google')} type="primary" style={{ padding: '0 100px' }} icon={<GoogleOutlined />}>Sign in with Google</Button>
       </Typography.Paragraph>
       <Typography.Paragraph style={{ textAlign: 'center' }}>
-        <Button onClick={() => login('github')} style={{ background: '#000', color: '#fff', padding: '0 40px' }} icon={<GithubOutlined />}>Sign in with GitHub</Button>
+        <Button onClick={() => login('github')} style={{ background: '#000', color: '#fff', padding: '0 100px' }} icon={<GithubOutlined />}>Sign in with GitHub</Button>
       </Typography.Paragraph>
     </Spin>
   </div>
