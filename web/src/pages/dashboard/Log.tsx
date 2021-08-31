@@ -1,8 +1,11 @@
-import { Button, Col, Drawer, Input, List, Result, Row, Tag, Typography } from 'antd'
+import { Breadcrumb, Button, Col, Divider, Drawer, Input, Layout, List, Result, Row, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import useSWR from 'swr'
+import useSWRImmutable from 'swr/immutable'
 import { fetcher } from '../../utils/Fetcher'
 
 interface Props {
@@ -19,7 +22,9 @@ const Log: React.FC<Props> = ({ appId }) => {
   const [data, setData] = useState<any[]>()
   const [recover, setRecover] = useState<{ search: string | null, data?: any[] }>()
   const { data: logs, error } = useSWR(param ? `/applications/${appId}/logs?${qs.stringify(param)}` : null, fetcher)
+  const { data: application } = useSWRImmutable(`/applications/${appId}`, fetcher)
   const [log, setLog] = useState<any>()
+  const history = useHistory()
 
   useEffect(() => {
     if (logs?.logs) {
@@ -79,18 +84,32 @@ const Log: React.FC<Props> = ({ appId }) => {
 
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
-      {error?.status === 403 ? <Result status="403" /> : <>
-        <Typography.Paragraph>
-          <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear  />
-        </Typography.Paragraph>
-        <Typography.Paragraph style={{ textAlign: 'right' }}>
-          <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
-          <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
-          <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
-          <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
-          <Button type={timeRange === 14_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(14_400_000)}>4h</Button>
-          <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
-        </Typography.Paragraph>
+      {error?.status === 403 ? <Result status="403" title="Forbidden" subTitle={
+        <Button type="primary" onClick={() => history.goBack()}>Back</Button>} /> : <>
+        <Breadcrumb style={{ marginBottom: '15px' }}>
+          <Breadcrumb.Item>
+            <Link to="/dashboard">Dashboard</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{application?.application.name}</Breadcrumb.Item>
+        </Breadcrumb>
+        <Row gutter={16}>
+          <Col lg={14} span={24}>
+            <Typography.Paragraph>
+              <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear  />
+            </Typography.Paragraph>
+          </Col>
+          <Col lg={10} span={24}>
+            <Typography.Paragraph>
+              <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
+              <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
+              <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
+              <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
+              <Button type={timeRange === 14_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(14_400_000)}>4h</Button>
+              <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
+            </Typography.Paragraph>
+          </Col>
+        </Row>
+        <Divider />
         <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
           <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
             <Tag color={item.type === 'error' ? 'red' : item === 'warn' ? 'orange' : 'default'}>

@@ -3,11 +3,12 @@ import { Button, Spin, Typography } from 'antd'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
+import useSWRImmutable from 'swr/immutable'
 import { fetcher } from '../utils/Fetcher'
 
 const LoginButtons: React.FC = () => {
   const history = useHistory()
-  const { data, error } = useSWR('/auth/urls', fetcher)
+  const { data, error } = useSWRImmutable('/auth/urls', fetcher)
   const { data: user } = useSWR('/auth/me', fetcher)
 
   useEffect(() => {

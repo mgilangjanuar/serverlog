@@ -1,8 +1,8 @@
-import { LogoutOutlined, MinusCircleOutlined, SettingOutlined } from '@ant-design/icons'
+import { CopyOutlined, QuestionCircleOutlined, MinusCircleOutlined, SettingOutlined } from '@ant-design/icons'
 import { Button, Card, Col, Drawer, Empty, Form, Input, message, Popconfirm, Row, Space, Spin, Tooltip, Typography } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import Layout from 'antd/lib/layout/layout'
-import JSCookie from 'js-cookie'
+import { write } from 'clipboardy'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import useSWR, { mutate } from 'swr'
@@ -66,21 +66,19 @@ const Main: React.FC<Props> = ({ user }) => {
       })
   }
 
-  const logout = () => {
-    JSCookie.remove('authorization')
-    localStorage.removeItem('refresh_token')
-    window.location.replace('/')
+  const copyUuid = () => {
+    write(user?.id)
+    message.info('copied')
   }
 
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
-      <Typography.Paragraph style={{ float: 'right' }}>
-        <Tooltip title="Logout">
-          <Button onClick={logout} type="link" danger icon={<LogoutOutlined />} />
-        </Tooltip>
-      </Typography.Paragraph>
       <Typography.Paragraph>
-        <Button type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
+        <Space>
+          <Button style={{ marginRight: '10px' }} type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
+          UUID <Tooltip title="You can ask others to invite you to their apps with this ID"><QuestionCircleOutlined /></Tooltip>
+          <Input.Search value={user?.id} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copyUuid} />
+        </Space>
       </Typography.Paragraph>
       {!data && !error ? <div style={{ textAlign: 'center' }}><Spin /></div> : ''}
       {data?.applications && !data.applications.length ? <Empty /> : ''}
