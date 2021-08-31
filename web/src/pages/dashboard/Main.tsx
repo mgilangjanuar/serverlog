@@ -66,8 +66,8 @@ const Main: React.FC<Props> = ({ user }) => {
       })
   }
 
-  const copyUuid = () => {
-    write(user?.id)
+  const copy = (value: string) => {
+    write(value)
     message.info('copied')
   }
 
@@ -77,7 +77,7 @@ const Main: React.FC<Props> = ({ user }) => {
         <Space>
           <Button style={{ marginRight: '10px' }} type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
           UUID <Tooltip title="You can ask others to invite you to their apps with this ID"><QuestionCircleOutlined /></Tooltip>
-          <Input.Search value={user?.id} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copyUuid} />
+          <Input.Search value={user?.id} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Space>
       </Typography.Paragraph>
       {!data && !error ? <div style={{ textAlign: 'center' }}><Spin /></div> : ''}
@@ -104,8 +104,8 @@ const Main: React.FC<Props> = ({ user }) => {
         <Form.Item name="id" hidden>
           <Input />
         </Form.Item>
-        {app?.key ? <Form.Item name="key" label="Key">
-          <Input disabled />
+        {app?.key ? <Form.Item label={<>Key&nbsp; <Tooltip title="Save this key for init the SDK"><QuestionCircleOutlined /></Tooltip></>}>
+          <Input.Search value={app?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Form.Item> : ''}
         <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the name' }]}>
           <Input />
