@@ -79,7 +79,6 @@ const Log: React.FC<Props> = ({ appId }) => {
           <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
           <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
           <Button type={timeRange === 14_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(14_400_000)}>4h</Button>
-          <Button type={timeRange === 43_200_000 ? 'primary' : 'default'} onClick={() => setTimeRange(43_200_000)}>12h</Button>
           <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
         </Typography.Paragraph>
         <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>

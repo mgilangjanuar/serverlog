@@ -20,7 +20,10 @@ export class Webhook {
     }
 
     const applicationId = JSON.parse(AES.decrypt(decodeURIComponent(key.toString()), Buffer.from(process.env.SECRET).toString('base64')).toString(enc.Utf8))
-    await Supabase.build().from<Logs>('logs').delete().lt('created_at', new Date(new Date().getTime() - 86_400_000))
+
+    // Delete all logs < 12 hours
+    await Supabase.build().from<Logs>('logs').delete().lt('created_at', new Date(new Date().getTime() - 43_200_000).toISOString())
+
     await Supabase.build().from<Logs>('logs').insert([{
       application_id: applicationId,
       type: type || 'log',
