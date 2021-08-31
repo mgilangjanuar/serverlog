@@ -6,7 +6,7 @@ export class ServerLog {
   private static BASE_URL = 'https://serverlog.vercel.app/api/v1/webhook'
   private static KEY: string
 
-  public static init(key: string): void {
+  public static init(key: string = process.env.SL_KEY): void {
     this.KEY = key
   }
 

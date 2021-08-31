@@ -1,6 +1,3 @@
-import 'source-map-support/register'
-require('dotenv').config({ path: '.env' })
-
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, {
@@ -15,7 +12,12 @@ import express, {
 import listEndpoints from 'express-list-endpoints'
 import morgan from 'morgan'
 import path from 'path'
+import 'source-map-support/register'
 import { API as V1 } from './api/v1'
+import { connected } from './event/Connected'
+import { Socket } from './service/Socket'
+require('dotenv').config({ path: '.env' })
+
 
 const app = express()
 app.use(cors({
@@ -53,6 +55,8 @@ app.use((err: { status?: number, body?: Record<string, any> }, _: Request, res: 
   return res.status(err.status || 500).send(err.body || { error: 'Something error' })
 })
 
-app.listen(process.env.PORT || 4000, () => console.log(`Running at :${process.env.PORT || 4000}...`))
+const server = app.listen(process.env.PORT || 4000, () => console.log(`Running at :${process.env.PORT || 4000}...`))
+Socket.init(server)
+Socket.io.on('connection', connected)
 
 console.log(listEndpoints(app))

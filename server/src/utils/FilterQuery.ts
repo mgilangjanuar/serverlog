@@ -1,5 +1,5 @@
 export async function filterQuery<T = any>(base: Record<string, any>, query: Record<string, any>): Promise<T> {
-  const { page, size, ...filters } = query
+  const { page, size, t: _t, ...filters } = query
 
   for (const param of Object.keys(filters)) {
     const [column, op] = param.split(/(.+)\./).slice(1)

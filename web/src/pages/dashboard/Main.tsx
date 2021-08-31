@@ -65,7 +65,7 @@ const Main: React.FC<Props> = ({ user }) => {
       })
   }
 
-  return <Row style={{ minHeight: '85vh', padding: '70px 0' }}>
+  return <Row style={{ minHeight: '85vh', padding: '30px 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
       <Typography.Paragraph>
         <Button type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
