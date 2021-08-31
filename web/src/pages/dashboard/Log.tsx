@@ -62,8 +62,8 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
         <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
         <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
-        <Button type={timeRange === 7_200_000 ? 'primary' : 'default'} onClick={() => setTimeRange(7_200_000)}>2h</Button>
-        <Button type={timeRange === 86_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(86_400_000)}>1d</Button>
+        <Button type={timeRange === 14_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(14_400_000)}>4h</Button>
+        <Button type={timeRange === 43_200_000 ? 'primary' : 'default'} onClick={() => setTimeRange(43_200_000)}>12h</Button>
         <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
       </Typography.Paragraph>
       <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
@@ -81,7 +81,7 @@ const Log: React.FC<Props> = ({ appId }) => {
       </Typography.Paragraph>
     </Col>
     <Drawer width={1200} title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onClose={() => setLog(undefined)}>
-      <Typography.Text type={log?.type === 'error' ? 'danger' : log?.type === 'warn' ? 'warning' : undefined}><pre>{log?.log_data}</pre></Typography.Text>
+      <Typography.Text style={{ fontSize: '13px' }} type={log?.type === 'error' ? 'danger' : log?.type === 'warn' ? 'warning' : undefined}><pre>{log?.log_data}</pre></Typography.Text>
     </Drawer>
   </Row>
 
