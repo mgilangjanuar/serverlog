@@ -15,7 +15,7 @@
 
 .ant-drawer-content-wrapper {
   width: 100% !important;
-  max-width: 480px;
+  max-width: 1000px;
 }
 
 .ant-list-sm .ant-list-item {

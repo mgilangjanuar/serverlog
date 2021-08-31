@@ -1,4 +1,4 @@
-import { Button, Col, Input, List, Modal, Row, Tag, Typography } from 'antd'
+import { Button, Col, Drawer, Input, List, Row, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
@@ -22,7 +22,9 @@ const Log: React.FC<Props> = ({ appId }) => {
 
   useEffect(() => {
     if (logs?.logs) {
-      setData([...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs])
+      const newData = [...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs]
+      newData.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      setData(newData)
     }
   }, [logs])
 
@@ -53,9 +55,9 @@ const Log: React.FC<Props> = ({ appId }) => {
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
       <Typography.Paragraph>
-        <Input.Search placeholder="search..." onSearch={search} enterButton allowClear />
+        <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear />
       </Typography.Paragraph>
-      <Typography.Paragraph>
+      <Typography.Paragraph style={{ textAlign: 'right' }}>
         <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
         <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
         <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
@@ -78,9 +80,9 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Button loading={!logs && !error} onClick={load}>load more</Button>
       </Typography.Paragraph>
     </Col>
-    <Modal width={1200} title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onCancel={() => setLog(undefined)} cancelText="Close">
+    <Drawer width={1200} title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onClose={() => setLog(undefined)}>
       <Typography.Text type={log?.type === 'error' ? 'danger' : log?.type === 'warn' ? 'warning' : undefined}><pre>{log?.log_data}</pre></Typography.Text>
-    </Modal>
+    </Drawer>
   </Row>
 
 }

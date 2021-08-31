@@ -102,7 +102,7 @@ const Main: React.FC<Props> = ({ user }) => {
       </Layout>
     </Col>
     <Drawer title={app?.id === 'create' ? 'Create New App' : `Update ${app?.name}`} visible={app?.id} onClose={() => setApp(undefined)}>
-      <Form form={form} onFinish={save} layout="vertical">
+      <Form form={form} onFinish={save} layout="horizontal" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
         <Form.Item name="id" hidden>
           <Input />
         </Form.Item>
@@ -118,7 +118,7 @@ const Main: React.FC<Props> = ({ user }) => {
         <Form.Item name="description" label="Description">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label="Users Invitation">
+        <Form.Item label="Members">
           <Form.List name="uids" rules={[
             {
               validator: async (_, uids) => {
