@@ -4,9 +4,9 @@ import { serializeError } from 'serialize-error'
 
 export class ServerLog {
   private static BASE_URL = 'https://serverlog.vercel.app/api/v1/webhook'
-  private static KEY: string
+  private static KEY: string = process.env.SL_KEY
 
-  public static init(key: string = process.env.SL_KEY): void {
+  public static init(key: string): void {
     this.KEY = key
   }
 
