@@ -1,4 +1,4 @@
-import { Col, Divider, Layout, Row, Typography } from 'antd'
+import { Col, Divider, Image, Layout, Row, Typography } from 'antd'
 import JSCookie from 'js-cookie'
 import QueryString from 'querystring'
 import React, { useEffect } from 'react'
@@ -26,14 +26,12 @@ const Home: React.FC = () => {
       <Row>
         <Col lg={{ span: 12, offset: 6 }} md={{ span: 16, offset: 4 }} sm={{ span: 20, offset: 2 }} span={24}>
           <div style={{ padding: '0 10px' }}>
-            <Typography.Title level={4} style={{ textAlign: 'center' }}>
-              👋 Say goodbye to console.log
+            <Typography.Title type="secondary" level={4} style={{ textAlign: 'center' }}>
+              Say goodbye to console.log 👋
             </Typography.Title>
-            <Typography.Paragraph style={{ textAlign: 'center' }}>
-              <Typography.Text type="danger">
-                <code>console.log('Fvck you!', theFuckerObjectThatMadeErrorsButWorksInMyMachine)</code>
-              </Typography.Text>
-            </Typography.Paragraph>
+            <Typography.Title style={{ fontWeight: 200, textAlign: 'center', marginTop: 0 }}>
+              The Lightweight Debugger Platform
+            </Typography.Title>
             <Typography.Paragraph style={{ marginTop: '50px' }}>
               Installation
               <pre style={{ overflowX: 'auto', whiteSpace: 'pre' }}>$ npm install serverlogjs@latest -S{'\n\n# with yarn\n'}$ yarn add serverlogjs@latest</pre>
@@ -44,12 +42,11 @@ const Home: React.FC = () => {
             </Typography.Paragraph>
             <Divider>Login 🚀</Divider>
             <LoginButtons />
-            <Typography.Paragraph style={{ textAlign: 'center' }}>
-              <img style={{ width: '100%' }} alt="Code Version Control.svg" src="./Code Version Control.svg" />
-            </Typography.Paragraph>
-            <Typography.Title level={3}>Why?</Typography.Title>
+            <img style={{ width: '100%' }} alt="Code Version Control.svg" src="./Code Version Control.svg" />
+            <Typography.Title level={3}>Features</Typography.Title>
             <ul>
               <li>Free</li>
+              <li>Collaborative monitoring</li>
               <li>Lightweight and clean</li>
               <li>Open source</li>
             </ul>
@@ -58,7 +55,7 @@ const Home: React.FC = () => {
               Your data will be encrypted with <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">Advanced Encryption Standard (AES)</a> in database.
             </Typography.Paragraph>
           </div>
-          <img src="/Screen Shot 2021-08-31 at 17.06.27.png" alt="Screen Shot 2021-08-31 at 17.06.27.png" style={{ width: '100%' }} />
+          <Image src="/Screen Shot 2021-08-31 at 17.06.27.png" alt="Screen Shot 2021-08-31 at 17.06.27.png" style={{ width: '100%' }} />
           <div style={{ padding: '20px 10px' }}>
             <Typography.Title level={3}>Limitations</Typography.Title>
             <Typography.Paragraph>

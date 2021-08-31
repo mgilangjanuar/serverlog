@@ -17,6 +17,7 @@ const Log: React.FC<Props> = ({ appId }) => {
   const [timeRange, setTimeRange] = useState<number | undefined>(300_000)
   const [param, setParam] = useState<any>()
   const [data, setData] = useState<any[]>()
+  const [recover, setRecover] = useState<{ search: string | null, data?: any[] }>()
   const { data: logs, error } = useSWR(param ? `/applications/${appId}/logs?${qs.stringify(param)}` : null, fetcher)
   const [log, setLog] = useState<any>()
 
@@ -28,6 +29,7 @@ const Log: React.FC<Props> = ({ appId }) => {
         const newData = [...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs]
         newData.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
         setData(newData)
+        setRecover({ search: null, data: newData })
       }
     }
   }, [logs])
@@ -61,11 +63,17 @@ const Log: React.FC<Props> = ({ appId }) => {
 
   const search = (value: string) => {
     if (value) {
-      setData(data?.filter(item => item.log_data.match(new RegExp(`${value}`, 'gi'))))
+      setRecover({ search: value, data: recover?.data || data })
     } else {
       setParam({ ...param, t: new Date().getTime() })
     }
   }
+
+  useEffect(() => {
+    if (recover?.search) {
+      setData(recover.data?.filter(item => item.log_data.match(new RegExp(`${recover.search}`, 'gi'))))
+    }
+  }, [recover])
 
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>

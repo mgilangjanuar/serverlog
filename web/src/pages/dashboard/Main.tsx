@@ -102,7 +102,7 @@ const Main: React.FC<Props> = ({ user }) => {
       </Layout>
     </Col>
     <Drawer title={app?.id === 'create' ? 'Create New App' : `Update ${app?.name}`} visible={app?.id} onClose={() => setApp(undefined)}>
-      <Form form={form} onFinish={save} layout="horizontal" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+      <Form form={form} onFinish={save} layout="horizontal" labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
         <Form.Item name="id" hidden>
           <Input />
         </Form.Item>
@@ -130,13 +130,13 @@ const Main: React.FC<Props> = ({ user }) => {
           ]}>
             {(fields, { add, remove }) => <>
               {fields.map((field, i) => <Row gutter={14} key={i}>
-                <Col span={23}>
+                <Col span={22}>
                   <Form.Item {...field} rules={[{ required: true, message: 'ID is required' }]}>
                     <Input />
                   </Form.Item>
                 </Col>
-                <Col span={1}>
-                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                <Col span={2}>
+                  <Button icon={<MinusCircleOutlined />} type="link" danger onClick={() => remove(field.name)} />
                 </Col>
               </Row>)}
               <Form.Item>
@@ -145,7 +145,7 @@ const Main: React.FC<Props> = ({ user }) => {
             </>}
           </Form.List>
         </Form.Item>
-        <Form.Item style={{ float: 'right' }}>
+        <Form.Item style={{ textAlign: 'right' }} wrapperCol={{ span: 18 }}>
           <Space>
             <Popconfirm title="Are you sure?" onConfirm={() => remove(app)}>
               <Button danger>Remove</Button>
