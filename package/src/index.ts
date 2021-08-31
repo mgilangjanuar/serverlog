@@ -11,15 +11,15 @@ export class ServerLog {
   }
 
   public static async log(...data: any[]): Promise<void> {
-    return await this._log('log', data)
+    return await this._log('log', ...data)
   }
 
   public static async error(...data: any[]): Promise<void> {
-    return await this._log('error', data)
+    return await this._log('error', ...data)
   }
 
   public static async warn(...data: any[]): Promise<void> {
-    return await this._log('warn', data)
+    return await this._log('warn', ...data)
   }
 
   private static async _log(type: string, ...data: any[]): Promise<void> {

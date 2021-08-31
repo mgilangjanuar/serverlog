@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Layout, List, Row, Tag, Typography } from 'antd'
+import { Button, Col, Drawer, Input, Layout, List, Row, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
@@ -42,8 +42,19 @@ const Log: React.FC<Props> = ({ appId }) => {
     }
   }
 
+  const search = (value: string) => {
+    if (value) {
+      setData(data?.filter(item => item.log_data.match(new RegExp(`${value}`, 'gi'))))
+    } else {
+      setParam({ ...param, t: new Date().getTime() })
+    }
+  }
+
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
+      <Typography.Paragraph>
+        <Input.Search placeholder="search..." onSearch={search} enterButton allowClear />
+      </Typography.Paragraph>
       <Typography.Paragraph>
         <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
         <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
@@ -53,18 +64,16 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Button type={timeRange === 86_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(86_400_000)}>1d</Button>
         <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
       </Typography.Paragraph>
-      <Layout.Content style={{ height: '79vh', overflowY: 'auto' }}>
-        <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
-          <Typography.Paragraph>
-            <Tag color={item.type === 'error' ? 'red' : item === 'warn' ? 'orange' : 'default'}>
-              {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
-            </Tag>
-            <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
-              {item.log_data}
-            </Typography.Text>
-          </Typography.Paragraph>
-        </List.Item>} />
-      </Layout.Content>
+      <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
+        <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
+          <Tag color={item.type === 'error' ? 'red' : item === 'warn' ? 'orange' : 'default'}>
+            {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
+          </Tag>
+          <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
+            {item.log_data}
+          </Typography.Text>
+        </Typography.Paragraph>
+      </List.Item>} />
       <Typography.Paragraph style={{ textAlign: 'center' }}>
         <Button loading={!logs && !error} onClick={load}>load more</Button>
       </Typography.Paragraph>
