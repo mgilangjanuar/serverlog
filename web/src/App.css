@@ -2,6 +2,16 @@
   min-height: 100vh;
 }
 
+header, .ant-layout, footer, .ant-layout-footer {
+  background: #fff;
+}
+
+header, .ant-layout-header {
+  background: #fff;
+  box-shadow: 0 2px 8px #f0f1f2;
+  z-index: 10;
+}
+
 .container {
   padding: 24px 12px;
 }
@@ -9,7 +19,6 @@
 .logo {
   float: left;
   font-weight: bold;
-  color: #fff;
   font-size: 1.2em;
 }
 

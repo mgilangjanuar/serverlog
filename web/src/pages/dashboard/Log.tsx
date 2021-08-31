@@ -112,7 +112,7 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Divider />
         <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
           <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
-            <Tag color={item.type === 'error' ? 'red' : item === 'warn' ? 'orange' : 'default'}>
+            <Tag color={item.type === 'error' ? 'red' : item.type === 'warn' ? 'orange' : 'default'}>
               {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
             </Tag>
             <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>

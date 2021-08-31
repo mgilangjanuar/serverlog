@@ -1,4 +1,4 @@
-import { Col, Divider, Image, Layout, Row, Typography } from 'antd'
+import { Carousel, Col, Divider, Image, Layout, Row, Typography } from 'antd'
 import JSCookie from 'js-cookie'
 import QueryString from 'querystring'
 import React, { useEffect } from 'react'
@@ -32,6 +32,11 @@ const Home: React.FC = () => {
             <Typography.Title style={{ fontWeight: 200, textAlign: 'center', marginTop: 0 }}>
               The Lightweight Debugger Platform
             </Typography.Title>
+            <Carousel style={{ boxShadow: '13px 13px 15px #f0f1f2' }} autoplay dots={false} effect="fade">
+              <Image style={{ width: '100%' }} src="/Screen Shot 2021-09-01 at 00.19.46.png"/>
+              <Image style={{ width: '100%' }} src="/Screen Shot 2021-09-01 at 00.20.11.png"/>
+              <Image style={{ width: '100%' }} src="/Screen Shot 2021-09-01 at 00.20.25.png"/>
+            </Carousel>
             <Typography.Paragraph style={{ marginTop: '50px' }}>
               Installation
               <pre style={{ overflowX: 'auto', whiteSpace: 'pre' }}>$ npm install serverlogjs@latest -S{'\n\n# with yarn\n'}$ yarn add serverlogjs@latest</pre>
@@ -48,6 +53,8 @@ const Home: React.FC = () => {
               <li>Free</li>
               <li>Collaborative monitoring</li>
               <li>Lightweight and clean</li>
+              <li>Up to 10 applications</li>
+              <li>Saving the last 12 hours log data</li>
               <li>Open source</li>
             </ul>
             <Typography.Title level={3}>Is it safe?</Typography.Title>
@@ -56,22 +63,6 @@ const Home: React.FC = () => {
             </Typography.Paragraph>
           </div>
           <Image src="/Screen Shot 2021-08-31 at 17.06.27.png" alt="Screen Shot 2021-08-31 at 17.06.27.png" style={{ width: '100%' }} />
-          <div style={{ padding: '20px 10px' }}>
-            <Typography.Title level={3}>Limitations</Typography.Title>
-            <Typography.Paragraph>
-              <ul>
-                <li>Up to 10 applications</li>
-                <li>Saving last 12 hours log data</li>
-              </ul>
-            </Typography.Paragraph>
-            <Typography.Title level={3}>Like this project?</Typography.Title>
-            <Typography.Paragraph>
-              You can donate or become a sponsor by emailing me at <a href="mailto:mgilangjanuar@gmail.com">mgilangjanuar@gmail.com</a> 😊
-            </Typography.Paragraph>
-            <Typography.Paragraph>
-              Or, simply give this repo (<a href="https://github.com/mgilangjanuar/serverlog" target="_blank">github.com/mgilangjanuar/serverlog</a>) a star 🌟
-            </Typography.Paragraph>
-          </div>
         </Col>
       </Row>
     </Layout.Content>
