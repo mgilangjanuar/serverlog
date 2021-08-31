@@ -2,7 +2,7 @@
 
 # server.log()
 
-A tiny tool to monitoring and debugging your project.
+A tiny tool for monitoring and debugging your project.
 
 Live at [serverlog.vercel.app](https://serverlog.vercel.app)
 
