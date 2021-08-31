@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Input, Layout, List, Row, Tag, Typography } from 'antd'
+import { Button, Col, Input, List, Modal, Row, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
@@ -78,9 +78,9 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Button loading={!logs && !error} onClick={load}>load more</Button>
       </Typography.Paragraph>
     </Col>
-    <Drawer title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onClose={() => setLog(undefined)}>
+    <Modal width={1200} title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onCancel={() => setLog(undefined)} cancelText="Close">
       <Typography.Text type={log?.type === 'error' ? 'danger' : log?.type === 'warn' ? 'warning' : undefined}><pre>{log?.log_data}</pre></Typography.Text>
-    </Drawer>
+    </Modal>
   </Row>
 
 }
