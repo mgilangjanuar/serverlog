@@ -48,6 +48,7 @@ export class Application {
 
     const { data: application } = await Supabase.build().from<Applications>('applications').update({
       ...data,
+      key: undefined,
       ...data.uids ? { uids: [...new Set(data.uids)].map(uid => uid.toString().trim()) } : {}
     }).eq('id', id).single()
     if (!application) {
