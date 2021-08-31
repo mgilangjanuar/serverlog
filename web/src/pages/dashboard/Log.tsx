@@ -42,7 +42,7 @@ const Log: React.FC<Props> = ({ appId }) => {
     }
   }
 
-  return <Row style={{ minHeight: '85vh', padding: '30px 0' }}>
+  return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
       <Typography.Paragraph>
         <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
@@ -50,25 +50,26 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
         <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
         <Button type={timeRange === 7_200_000 ? 'primary' : 'default'} onClick={() => setTimeRange(7_200_000)}>2h</Button>
+        <Button type={timeRange === 86_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(86_400_000)}>1d</Button>
         <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
       </Typography.Paragraph>
-      <Layout.Content style={{ height: '80vh', overflowY: 'auto' }}>
-        <List size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer' }}>
+      <Layout.Content style={{ height: '79vh', overflowY: 'auto' }}>
+        <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
           <Typography.Paragraph>
             <Tag color={item.type === 'error' ? 'red' : item === 'warn' ? 'orange' : 'default'}>
-              {moment(item.created_at).format('MMM DD, HH:mm:ss.SSS')}
+              {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
             </Tag>
             <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
               {item.log_data}
             </Typography.Text>
           </Typography.Paragraph>
         </List.Item>} />
-        <Typography.Paragraph style={{ textAlign: 'center' }}>
-          <Button loading={!logs && !error} onClick={load}>load more</Button>
-        </Typography.Paragraph>
       </Layout.Content>
+      <Typography.Paragraph style={{ textAlign: 'center' }}>
+        <Button loading={!logs && !error} onClick={load}>load more</Button>
+      </Typography.Paragraph>
     </Col>
-    <Drawer title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSS')} visible={log?.id} onClose={() => setLog(undefined)}>
+    <Drawer title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onClose={() => setLog(undefined)}>
       <Typography.Text type={log?.type === 'error' ? 'danger' : log?.type === 'warn' ? 'warning' : undefined}><pre>{log?.log_data}</pre></Typography.Text>
     </Drawer>
   </Row>

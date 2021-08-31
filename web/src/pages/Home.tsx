@@ -30,8 +30,14 @@ const Home: React.FC = () => {
           </Typography.Paragraph>
           <div style={{ padding: '0 10px 24px' }}>
             <Typography.Paragraph style={{ textAlign: 'center' }}>
-              <Typography.Text type="secondary"><strong>server.log()</strong> Debugging made easy</Typography.Text>
+              👋 Say good bye to
+              <Typography.Text type="danger">
+                <code>console.log('Fvck you!', theFuckerObjectThatMadeErrorsButWorksInMyMachine)</code>
+              </Typography.Text>
             </Typography.Paragraph>
+            {/* <Typography.Paragraph style={{ textAlign: 'center' }}>
+              <Typography.Text type="secondary"><strong>server.log();</strong> your valuable time saver</Typography.Text>
+            </Typography.Paragraph> */}
             <Divider>Login</Divider>
             <LoginButtons />
           </div>

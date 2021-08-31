@@ -1,6 +1,7 @@
 import { AES } from 'crypto-js'
 import { Request, Response } from 'express'
 import { Applications } from '../../model/Applications'
+import { Logs } from '../../model/Logs'
 import { Supabase } from '../../service/Supabase'
 import { filterQuery } from '../../utils/FilterQuery'
 import { Endpoint } from '../base/Endpoint'
@@ -68,6 +69,7 @@ export class Application {
   @Endpoint.DELETE('/:id', { middlewares: [JWTAuth()] })
   public async remove(req: Request, res: Response): Promise<any> {
     const { id } = req.params
+    await Supabase.build().from<Logs>('logs').delete().eq('application_id', id)
     const { data: application } = await Supabase.build().from<Applications>('applications').delete().eq('id', id).single()
     if (!application) {
       throw { status: 404, body: { error: 'Application not found' } }

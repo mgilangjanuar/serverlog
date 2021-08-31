@@ -1,7 +1,8 @@
-import { MinusCircleOutlined, SettingOutlined } from '@ant-design/icons'
-import { Button, Card, Col, Drawer, Empty, Form, Input, message, Popconfirm, Row, Space, Spin, Typography } from 'antd'
+import { LogoutOutlined, MinusCircleOutlined, SettingOutlined } from '@ant-design/icons'
+import { Button, Card, Col, Drawer, Empty, Form, Input, message, Popconfirm, Row, Space, Spin, Tooltip, Typography } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import Layout from 'antd/lib/layout/layout'
+import JSCookie from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import useSWR, { mutate } from 'swr'
@@ -65,8 +66,19 @@ const Main: React.FC<Props> = ({ user }) => {
       })
   }
 
-  return <Row style={{ minHeight: '85vh', padding: '30px 0' }}>
+  const logout = () => {
+    JSCookie.remove('authorization')
+    localStorage.removeItem('refresh_token')
+    window.location.replace('/')
+  }
+
+  return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
+      <Typography.Paragraph style={{ float: 'right' }}>
+        <Tooltip title="Logout">
+          <Button onClick={logout} type="link" danger icon={<LogoutOutlined />} />
+        </Tooltip>
+      </Typography.Paragraph>
       <Typography.Paragraph>
         <Button type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
       </Typography.Paragraph>
@@ -89,14 +101,14 @@ const Main: React.FC<Props> = ({ user }) => {
         </Row>
       </Layout>
     </Col>
-    <Drawer title={`Update ${app?.name}`} visible={app?.id} onClose={() => setApp(undefined)}>
+    <Drawer title={app?.id === 'create' ? 'Create New App' : `Update ${app?.name}`} visible={app?.id} onClose={() => setApp(undefined)}>
       <Form form={form} onFinish={save} layout="vertical">
         <Form.Item name="id" hidden>
           <Input />
         </Form.Item>
-        <Form.Item name="key" label="Key">
+        {app?.key ? <Form.Item name="key" label="Key">
           <Input disabled />
-        </Form.Item>
+        </Form.Item> : ''}
         <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the name' }]}>
           <Input />
         </Form.Item>

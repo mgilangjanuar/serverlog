@@ -14,13 +14,13 @@ interface PageProps extends RouteComponentProps<{
 
 const Dashboard: React.FC<PageProps> = ({ match }) => {
   const history = useHistory()
-  const { data: user } = useSWR('/auth/me', fetcher)
+  const { data: user, error } = useSWR('/auth/me', fetcher)
 
   useEffect(() => {
-    if (user === null) {
+    if (error) {
       history.replace('/')
     }
-  }, [history, user])
+  }, [error])
 
   return <>
     <Navbar user={user?.user} />
