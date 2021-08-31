@@ -1,3 +1,4 @@
+import { SearchOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, Col, Drawer, Input, List, Result, Row, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
@@ -25,6 +26,7 @@ const Log: React.FC<Props> = ({ appId }) => {
     if (logs?.logs) {
       if (page === 0) {
         setData(logs.logs)
+        setRecover({ search: null, data: logs.logs })
       } else {
         const newData = [...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs]
         newData.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
@@ -65,7 +67,8 @@ const Log: React.FC<Props> = ({ appId }) => {
     if (value) {
       setRecover({ search: value, data: recover?.data || data })
     } else {
-      setParam({ ...param, t: new Date().getTime() })
+      // setParam({ ...param, t: new Date().getTime() })
+      setData(recover?.data || data)
     }
   }
 
@@ -79,7 +82,7 @@ const Log: React.FC<Props> = ({ appId }) => {
     <Col sm={{ span: 20, offset: 2 }} span={24}>
       {error?.status === 403 ? <Result status="403" /> : <>
         <Typography.Paragraph>
-          <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear />
+          <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear  />
         </Typography.Paragraph>
         <Typography.Paragraph style={{ textAlign: 'right' }}>
           <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
