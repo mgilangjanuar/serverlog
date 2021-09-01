@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Col, Divider, Drawer, Input, List, Result, Row, Tag, Typography } from 'antd'
+import { Breadcrumb, Button, Col, Divider, Drawer, Input, Layout, List, Result, Row, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
@@ -21,7 +21,7 @@ const Log: React.FC<Props> = ({ appId }) => {
   const [param, setParam] = useState<any>()
   const [data, setData] = useState<any[]>()
   const [recover, setRecover] = useState<{ search: string | null, data?: any[] }>()
-  const { data: logs, error } = useSWR(param ? `/applications/${appId}/logs?${qs.stringify(param)}` : null, fetcher)
+  const { data: logs, error } = useSWR(param ? `/applications/${appId}/logs?${qs.stringify(param)}&sort.created_at=asc` : null, fetcher)
   const { data: application } = useSWRImmutable(`/applications/${appId}`, fetcher)
   const [log, setLog] = useState<any>()
   const history = useHistory()
@@ -33,7 +33,6 @@ const Log: React.FC<Props> = ({ appId }) => {
         setRecover({ search: null, data: logs.logs })
       } else {
         const newData = [...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs]
-        newData.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
         setData(newData)
         setRecover({ search: null, data: newData })
       }
@@ -43,8 +42,7 @@ const Log: React.FC<Props> = ({ appId }) => {
   useEffect(() => {
     if (page) {
       setParam({
-        size: PAGE_SIZE,
-        page,
+        size: PAGE_SIZE, page,
         ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
       })
     }
@@ -53,8 +51,7 @@ const Log: React.FC<Props> = ({ appId }) => {
   useEffect(() => {
     setPage(0)
     setParam({
-      size: PAGE_SIZE,
-      page: 0,
+      size: PAGE_SIZE, page: 0,
       ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
     })
   }, [timeRange])
@@ -71,7 +68,6 @@ const Log: React.FC<Props> = ({ appId }) => {
     if (value) {
       setRecover({ search: value, data: recover?.data || data })
     } else {
-      // setParam({ ...param, t: new Date().getTime() })
       setData(recover?.data || data)
     }
   }
@@ -99,27 +95,28 @@ const Log: React.FC<Props> = ({ appId }) => {
             </Typography.Paragraph>
           </Col>
           <Col lg={10} span={24}>
-            <Typography.Paragraph>
+            <Layout.Content>
               <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
               <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
               <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
               <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
               <Button type={timeRange === 14_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(14_400_000)}>4h</Button>
               <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
-            </Typography.Paragraph>
+            </Layout.Content>
           </Col>
         </Row>
         <Divider />
-        <List loading={!logs && !error} size="small" dataSource={data} renderItem={item => <List.Item onClick={() => setLog(item)} style={{ cursor: 'pointer', padding: 0 }}>
-          <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
-            <Tag color={item.type === 'error' ? 'red' : item.type === 'warn' ? 'orange' : 'default'}>
-              {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
-            </Tag>
-            <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
-              {item.log_data}
-            </Typography.Text>
-          </Typography.Paragraph>
-        </List.Item>} />
+        <List loading={!logs && !error} size="small" dataSource={data}
+          renderItem={item => <List.Item onClick={() => setLog(item)} style={{ border: 'none', cursor: 'pointer', padding: 0 }}>
+            <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
+              <Tag color={item.type === 'error' ? 'red' : item.type === 'warn' ? 'orange' : 'default'}>
+                {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
+              </Tag>
+              <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
+                {item.log_data}
+              </Typography.Text>
+            </Typography.Paragraph>
+          </List.Item>} />
         <Typography.Paragraph style={{ textAlign: 'center' }}>
           <Button loading={!logs && !error} onClick={load}>load more</Button>
         </Typography.Paragraph>

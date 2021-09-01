@@ -1,7 +1,6 @@
-import { CopyOutlined, QuestionCircleOutlined, MinusCircleOutlined, SettingOutlined } from '@ant-design/icons'
-import { Button, Card, Col, Drawer, Empty, Form, Input, message, Popconfirm, Row, Space, Spin, Tooltip, Typography } from 'antd'
+import { CopyOutlined, MinusCircleOutlined, QuestionCircleOutlined, SettingOutlined } from '@ant-design/icons'
+import { Button, Card, Col, Divider, Drawer, Empty, Form, Input, Layout, message, Popconfirm, Row, Space, Spin, Tooltip, Typography } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
-import Layout from 'antd/lib/layout/layout'
 import { write } from 'clipboardy'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -73,13 +72,14 @@ const Main: React.FC<Props> = ({ user }) => {
 
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
-      <Typography.Paragraph>
+      <Layout.Content>
         <Space>
           <Button style={{ marginRight: '10px' }} type="primary" onClick={() => setApp({ id: 'create', uids: [user?.id] })}>Create App</Button>
           UUID <Tooltip title="You can ask others to invite you to their apps with this ID"><QuestionCircleOutlined /></Tooltip>
           <Input.Search value={user?.id} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Space>
-      </Typography.Paragraph>
+      </Layout.Content>
+      <Divider />
       {!data && !error ? <div style={{ textAlign: 'center' }}><Spin /></div> : ''}
       {data?.applications && !data.applications.length ? <Empty /> : ''}
       <Layout>
@@ -89,11 +89,7 @@ const Main: React.FC<Props> = ({ user }) => {
               {application.name}<br /><Typography.Text style={{ fontSize: '14px' }} type="secondary">{application.url?.replace(/^https?\:\/\//gi, '') || 'undefined'}</Typography.Text>
             </>} extra={<Button  type="link" icon={<SettingOutlined />} onClick={() => setApp(application)} />}
             actions={[<Button block type="link" onClick={() => history.push(`/dashboard/${application.id}`)}>View Logs</Button>]}>
-              <Card.Meta description={<>
-                <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-                  {application.description || 'no description'}
-                </div>
-              </>} />
+              <Card.Meta description={<Typography.Paragraph ellipsis={{ rows: 3 }}>{application.description || 'no description'}</Typography.Paragraph>} />
             </Card>
           </Col>)}
         </Row>
@@ -104,7 +100,7 @@ const Main: React.FC<Props> = ({ user }) => {
         <Form.Item name="id" hidden>
           <Input />
         </Form.Item>
-        {app?.key ? <Form.Item label={<>Key&nbsp; <Tooltip title="Save this key for init the SDK"><QuestionCircleOutlined /></Tooltip></>}>
+        {app?.key ? <Form.Item label={<>Key&nbsp; <Tooltip placement="topLeft" title="Save this key for init the SDK"><QuestionCircleOutlined /></Tooltip></>}>
           <Input.Search value={app?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Form.Item> : ''}
         <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please input the name' }]}>
