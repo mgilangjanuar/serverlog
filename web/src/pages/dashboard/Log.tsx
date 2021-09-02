@@ -1,4 +1,5 @@
-import { Breadcrumb, Button, Col, Divider, Drawer, Input, Layout, List, Result, Row, Tag, Typography } from 'antd'
+import { MenuOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Col, DatePicker, Divider, Drawer, Dropdown, Input, Layout, List, Menu, Result, Row, Space, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
@@ -17,7 +18,7 @@ const PAGE_SIZE = 20
 
 const Log: React.FC<Props> = ({ appId }) => {
   const [page, setPage] = useState<number>(0)
-  const [timeRange, setTimeRange] = useState<number | undefined>(300_000)
+  const [timeRange, setTimeRange] = useState<[moment.Moment, moment.Moment]>([moment().subtract(5, 'minutes'), moment()])
   const [param, setParam] = useState<any>()
   const [data, setData] = useState<any[]>()
   const [recover, setRecover] = useState<{ search: string | null, data?: any[] }>()
@@ -29,12 +30,10 @@ const Log: React.FC<Props> = ({ appId }) => {
   useEffect(() => {
     if (logs?.logs) {
       if (page === 0) {
-        setData(logs.logs)
-        setRecover({ search: null, data: logs.logs })
+        setRecover({ search: recover?.search || null, data: logs.logs })
       } else {
         const newData = [...data?.filter(d => !logs.logs.find((log: any) => log.id === d.id)) || [], ...logs.logs]
-        setData(newData)
-        setRecover({ search: null, data: newData })
+        setRecover({ search: recover?.search || null, data: newData })
       }
     }
   }, [logs])
@@ -43,7 +42,10 @@ const Log: React.FC<Props> = ({ appId }) => {
     if (page) {
       setParam({
         size: PAGE_SIZE, page,
-        ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
+        ...timeRange?.length ? {
+          ...timeRange[0] ? { 'created_at.gte': timeRange[0].toISOString() } : {},
+          ...timeRange[1] ? { 'created_at.lte':  timeRange[1].toISOString() } : {}
+        } : {}
       })
     }
   }, [page])
@@ -52,7 +54,10 @@ const Log: React.FC<Props> = ({ appId }) => {
     setPage(0)
     setParam({
       size: PAGE_SIZE, page: 0,
-      ...timeRange ? { 'created_at.gt': new Date(new Date().getTime() - timeRange).toISOString() } : {}
+      ...timeRange?.length ? {
+        ...timeRange[0] ? { 'created_at.gte': timeRange[0].toISOString() } : {},
+        ...timeRange[1] ? { 'created_at.lte':  timeRange[1].toISOString() } : {}
+      } : {}
     })
   }, [timeRange])
 
@@ -64,17 +69,13 @@ const Log: React.FC<Props> = ({ appId }) => {
     }
   }
 
-  const search = (value: string) => {
-    if (value) {
-      setRecover({ search: value, data: recover?.data || data })
-    } else {
-      setData(recover?.data || data)
-    }
+  const search = (value?: string) => {
+    setRecover({ search: value || null, data: recover?.data || data })
   }
 
   useEffect(() => {
-    if (recover?.search) {
-      setData(recover.data?.filter(item => item.log_data.match(new RegExp(`${recover.search}`, 'gi'))))
+    if (recover) {
+      setData(recover?.search ? recover.data?.filter(item => item.log_data.match(new RegExp(`${recover.search}`, 'gi'))) : recover.data)
     }
   }, [recover])
 
@@ -89,19 +90,26 @@ const Log: React.FC<Props> = ({ appId }) => {
           <Breadcrumb.Item>{application?.application.name}</Breadcrumb.Item>
         </Breadcrumb>
         <Row gutter={16}>
-          <Col lg={14} span={24}>
+          <Col lg={14} md={12} span={24}>
             <Typography.Paragraph>
               <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear  />
             </Typography.Paragraph>
           </Col>
-          <Col lg={10} span={24}>
+          <Col lg={10} md={12} span={24}>
             <Layout.Content>
-              <Button type={timeRange === 60_000 ? 'primary' : 'default'} onClick={() => setTimeRange(60_000)}>1m</Button>
-              <Button type={timeRange === 300_000 ? 'primary' : 'default'} onClick={() => setTimeRange(300_000)}>5m</Button>
-              <Button type={timeRange === 600_000 ? 'primary' : 'default'} onClick={() => setTimeRange(600_000)}>10m</Button>
-              <Button type={timeRange === 1_800_000 ? 'primary' : 'default'} onClick={() => setTimeRange(1_800_000)}>30m</Button>
-              <Button type={timeRange === 14_400_000 ? 'primary' : 'default'} onClick={() => setTimeRange(14_400_000)}>4h</Button>
-              <Button type={timeRange === 0 ? 'primary' : 'default'} onClick={() => setTimeRange(0)}>all</Button>
+              <Space>
+                <DatePicker.RangePicker showNow showTime value={timeRange} onCalendarChange={val => setTimeRange(val as any)} />
+                <Dropdown placement="bottomRight" overlay={<Menu>
+                  <Menu.Item onClick={() => setTimeRange([moment().subtract(1, 'minute'), moment()])}>1 minute ago</Menu.Item>
+                  <Menu.Item onClick={() => setTimeRange([moment().subtract(5, 'minutes'), moment()])}>5 minutes ago</Menu.Item>
+                  <Menu.Item onClick={() => setTimeRange([moment().subtract(10, 'minutes'), moment()])}>10 minutes ago</Menu.Item>
+                  <Menu.Item onClick={() => setTimeRange([moment().subtract(30, 'minutes'), moment()])}>30 minutes ago</Menu.Item>
+                  <Menu.Item onClick={() => setTimeRange([moment().subtract(2, 'hours'), moment()])}>2 hours ago</Menu.Item>
+                  <Menu.Item onClick={() => setTimeRange([moment().subtract(6, 'hours'), moment()])}>6 hours ago</Menu.Item>
+                </Menu>}>
+                  <Button type="text" icon={<MenuOutlined />} />
+                </Dropdown>
+              </Space>
             </Layout.Content>
           </Col>
         </Row>
