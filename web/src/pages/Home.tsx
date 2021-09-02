@@ -76,6 +76,10 @@ const Home: React.FC = () => {
           <Divider />
           <div style={{ padding: '0 10px' }}>
             <Typography.Title level={3}>Changelogs</Typography.Title>
+            <Typography.Paragraph>v0.1.1 (Sept 2, 2021)</Typography.Paragraph>
+            <ul>
+              <li>Update with time picker</li>
+            </ul>
             <Typography.Paragraph>v0.1.0 (Sept 1, 2021)</Typography.Paragraph>
             <ul>
               <li>First Release</li>

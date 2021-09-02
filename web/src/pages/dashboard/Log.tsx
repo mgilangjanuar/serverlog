@@ -90,15 +90,15 @@ const Log: React.FC<Props> = ({ appId }) => {
           <Breadcrumb.Item>{application?.application.name}</Breadcrumb.Item>
         </Breadcrumb>
         <Row gutter={16}>
-          <Col lg={14} md={12} span={24}>
+          <Col lg={16} md={14} span={24}>
             <Typography.Paragraph>
               <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear  />
             </Typography.Paragraph>
           </Col>
-          <Col lg={10} md={12} span={24}>
+          <Col lg={8} md={10} span={24}>
             <Layout.Content>
               <Space>
-                <DatePicker.RangePicker showNow showTime value={timeRange} onCalendarChange={val => setTimeRange(val as any)} />
+                <DatePicker.RangePicker showNow picker="time" value={timeRange} onCalendarChange={val => setTimeRange(val as any)} />
                 <Dropdown placement="bottomRight" overlay={<Menu>
                   <Menu.Item onClick={() => setTimeRange([moment().subtract(1, 'minute'), moment()])}>1 minute ago</Menu.Item>
                   <Menu.Item onClick={() => setTimeRange([moment().subtract(5, 'minutes'), moment()])}>5 minutes ago</Menu.Item>
