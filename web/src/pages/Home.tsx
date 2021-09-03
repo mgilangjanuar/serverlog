@@ -63,19 +63,23 @@ const Home: React.FC = () => {
               <li>Free</li>
               <li>Collaborative monitoring</li>
               <li>Lightweight and clean</li>
-              <li>Up to 10 applications</li>
+              <li>Up to 6 applications</li>
               <li>Saving the last 12 hours log data</li>
               <li>Open source</li>
             </ul>
             <Typography.Title level={3}>Privacy Concern</Typography.Title>
             <Typography.Paragraph>
-              Your data will be encrypted with <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank">Advanced Encryption Standard (AES)</a> in database.
+              Your data will be encrypted with <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" target="_blank">RSA encryption</a> in the database. The system only saves the public key and you will get the private key after creating an application. The private key is saved only in the client-side/browser. <Typography.Text type="danger">⚠️ So, don't share the private key with anyone/any devices you don't trust.</Typography.Text>
             </Typography.Paragraph>
           </div>
-          <Image src="/Screen Shot 2021-08-31 at 17.06.27.png" alt="Screen Shot 2021-08-31 at 17.06.27.png" style={{ width: '100%' }} />
+          <Image src="/Screen Shot 2021-09-03 at 13.33.58.png" alt="Screen Shot 2021-09-03 at 13.33.58.png" style={{ width: '100%' }} />
           <Divider />
           <div style={{ padding: '0 10px' }}>
             <Typography.Title level={3}>Changelogs</Typography.Title>
+            <Typography.Paragraph>v0.2 (Sept 3, 2021)</Typography.Paragraph>
+            <ul>
+              <li>Update data encryption with RSA</li>
+            </ul>
             <Typography.Paragraph>v0.1.1 (Sept 2, 2021)</Typography.Paragraph>
             <ul>
               <li>Update with time picker</li>

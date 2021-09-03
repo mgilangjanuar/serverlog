@@ -161,7 +161,7 @@ const Main: React.FC<Props> = ({ user }) => {
           <Input.Search defaultValue={appKeys?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Form.Item>
         <Divider />
-        <Form.Item label={<>Private Key&nbsp; <Tooltip placement="bottomLeft" title="It's used to decrypt your log data, please don't share this with everyone except members of this app."><WarningOutlined /></Tooltip></>}>
+        <Form.Item label={<>Private Key&nbsp; <Tooltip placement="bottomLeft" title="It's used to decrypt your log data, please don't share this with anyone except members of this app."><WarningOutlined /></Tooltip></>}>
           <Input.TextArea rows={10} value={appKeys?.private_key} contentEditable={false}
             onChange={({ target }) => setAppKeys({ ...appKeys, private_key: target.value })} />
           <Typography.Paragraph type="secondary">
