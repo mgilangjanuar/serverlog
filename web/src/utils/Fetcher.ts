@@ -2,11 +2,18 @@ import axios, { Method } from 'axios'
 import JSCookie from 'js-cookie'
 
 export const fetcher = async (url: string, method: Method = 'get', data?: Record<string, any>): Promise<any> => {
+  return await fetcherWithSecret(url, '', method, data)
+}
+
+export const fetcherWithSecret = async (url: string, secret: string, method: Method = 'get', data?: Record<string, any>): Promise<any> => {
   const request = async () => await axios({
     url: `${process.env.REACT_APP_API_URL || ''}/api/v1${url}`,
     method,
     data,
-    withCredentials: true
+    withCredentials: true,
+    headers: {
+      'sl-secret': secret
+    }
   })
 
   try {

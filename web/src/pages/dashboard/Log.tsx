@@ -1,5 +1,5 @@
 import { MenuOutlined } from '@ant-design/icons'
-import { Breadcrumb, Button, Col, DatePicker, Divider, Drawer, Dropdown, Input, Layout, List, Menu, Result, Row, Space, Tag, Typography } from 'antd'
+import { Breadcrumb, Button, Col, DatePicker, Divider, Drawer, Dropdown, Input, Layout, List, Menu, message, Result, Row, Space, Tag, Typography } from 'antd'
 import moment from 'moment'
 import qs from 'qs'
 import { useEffect, useState } from 'react'
@@ -7,7 +7,7 @@ import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import useSWR from 'swr'
 import useSWRImmutable from 'swr/immutable'
-import { fetcher } from '../../utils/Fetcher'
+import { fetcher, fetcherWithSecret } from '../../utils/Fetcher'
 
 interface Props {
   appId: string,
@@ -22,7 +22,7 @@ const Log: React.FC<Props> = ({ appId }) => {
   const [param, setParam] = useState<any>()
   const [data, setData] = useState<any[]>()
   const [recover, setRecover] = useState<{ search: string | null, data?: any[] }>()
-  const { data: logs, error } = useSWR(param ? `/applications/${appId}/logs?${qs.stringify(param)}&sort.created_at=asc` : null, fetcher)
+  const { data: logs, error } = useSWR(param ? [`/applications/${appId}/logs?${qs.stringify(param)}&sort.created_at=asc`, localStorage.getItem(`sl:privkey:${appId}`)] : null, fetcherWithSecret)
   const { data: application } = useSWRImmutable(`/applications/${appId}`, fetcher)
   const [log, setLog] = useState<any>()
   const history = useHistory()
@@ -78,6 +78,12 @@ const Log: React.FC<Props> = ({ appId }) => {
       setData(recover?.search ? recover.data?.filter(item => item.log_data.match(new RegExp(`${recover.search}`, 'gi'))) : recover.data)
     }
   }, [recover])
+
+  useEffect(() => {
+    if (error) {
+      message.error(error.data.error)
+    }
+  }, [error])
 
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
