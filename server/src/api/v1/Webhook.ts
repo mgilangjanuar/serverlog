@@ -31,7 +31,6 @@ export class Webhook {
     await Supabase.build().from<Logs>('logs').insert([{
       application_id: applicationId,
       type: type || 'log',
-      // log_data: AES.encrypt(data, generateSecret(applicationId)).toString()
       log_data: rsa.encrypt(data, 'base64')
     }])
     return res.send({ success: true })

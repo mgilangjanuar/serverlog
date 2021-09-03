@@ -31,14 +31,19 @@ export class Application {
     }
 
     const key = new NodeRSA()
-    const { data: application } = await Supabase.build().from<Applications>('applications').insert([
+    key.generateKeyPair()
+    const { data: application, error } = await Supabase.build().from<Applications>('applications').insert([
       {
         ...data,
         public_key: key.exportKey('public'),
         uids: [req.user.id]
       }
     ]).single()
-    return res.send({ application, secret: key.exportKey('private') })
+    if (error) {
+      console.error(error)
+      throw error
+    }
+    return res.send({ application, private: key.exportKey('private') })
   }
 
   @Endpoint.PATCH('/:id', { middlewares: [JWTAuth()] })

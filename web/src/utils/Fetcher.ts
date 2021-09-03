@@ -12,12 +12,13 @@ export const fetcherWithSecret = async (url: string, secret: string, method: Met
     data,
     withCredentials: true,
     headers: {
-      'sl-secret': secret
+      'sl-secret': secret.replace(/\n/gi, '\\n')
     }
   })
 
   try {
-    return (await request())?.data
+    const result = await request()
+    return result?.data
   } catch (error) {
     const { response } = error as any
     if (response?.status === 401 && localStorage.getItem('refresh_token')) {

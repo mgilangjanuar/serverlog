@@ -20,13 +20,13 @@ export class Log {
       req.query)
 
     try {
-      const rsa = new NodeRSA(req.headers['sl-secret'] as string)
+      const rsa = new NodeRSA(req.headers['sl-secret'].toString().replace(/\\n/gi, '\n'))
       return res.send({ logs: logs.map(log => ({
         ...log,
-        // log_data: AES.decrypt(log.log_data, generateSecret(req.application.id)).toString(enc.Utf8) })) })
         log_data: rsa.decrypt(log.log_data, 'utf8')
       })) })
     } catch (error) {
+      console.error(error)
       throw { status: 403, body: { error: 'Invalid private key' } }
     }
   }

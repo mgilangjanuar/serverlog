@@ -32,11 +32,12 @@ const Main: React.FC<Props> = ({ user }) => {
     setLoading(true)
     if (application.id === 'create') {
       fetcher('/applications', 'post', { application: { ...application, id: undefined } })
-        .then(() => {
+        .then(data => {
           mutate('/applications?sort.created_at=desc')
           message.success('Saved')
           setApp(false)
           setLoading(false)
+          localStorage.setItem(`sl:privkey:${data.application?.id}`, data.private)
         }).catch(({ response }) => {
           message.error(response?.data?.error || 'Something error')
           setLoading(false)
@@ -71,10 +72,9 @@ const Main: React.FC<Props> = ({ user }) => {
     message.info('copied')
   }
 
-  const savePrivateKey = ({ target }: { target: EventTarget & HTMLTextAreaElement }) => {
-    localStorage.setItem(`sl:privkey:${appKeys?.id}`, target.innerHTML)
-    message.info('Saved')
-  }
+  useEffect(() => {
+    localStorage.setItem(`sl:privkey:${appKeys?.id}`, appKeys?.private_key)
+  }, [appKeys])
 
   return <Row style={{ minHeight: '85vh', padding: '30px 0 0' }}>
     <Col sm={{ span: 20, offset: 2 }} span={24}>
@@ -95,7 +95,7 @@ const Main: React.FC<Props> = ({ user }) => {
               {application.name}<br /><Typography.Text style={{ fontSize: '14px' }} type="secondary">{application.url?.replace(/^https?\:\/\//gi, '') || 'undefined'}</Typography.Text>
             </>} actions={[
               <Button  type="link" icon={<SettingOutlined />} onClick={() => setApp(application)} />,
-              <Button  type="link" icon={<KeyOutlined />} onClick={() => setAppKeys(application)} />,
+              <Button  type="link" icon={<KeyOutlined />} onClick={() => setAppKeys({ ...application, private_key: localStorage.getItem(`sl:privkey:${application?.id}`) })} />,
               <Button block type="link" onClick={() => history.push(`/dashboard/${application.id}`)} icon={<ContainerOutlined />} />
             ]}>
               <Card.Meta description={<Typography.Paragraph ellipsis={{ rows: 2 }}>{application.description || 'no description'}</Typography.Paragraph>} />
@@ -156,14 +156,14 @@ const Main: React.FC<Props> = ({ user }) => {
       </Form>
     </Drawer>
     <Drawer title={`Keys of ${appKeys?.name}`} visible={appKeys?.id} onClose={() => setAppKeys(undefined)}>
-      <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
+      <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
         <Form.Item label={<>SDK Key&nbsp; <Tooltip placement="topLeft" title="Save this key for init the SDK"><QuestionCircleOutlined /></Tooltip></>}>
-          <Input.Search value={appKeys?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
+          <Input.Search defaultValue={appKeys?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Form.Item>
         <Divider />
         <Form.Item label={<>Private Key&nbsp; <Tooltip placement="bottomLeft" title="It's used to decrypt your log data, please don't share this with everyone except members of this app."><WarningOutlined /></Tooltip></>}>
-          <Input.TextArea rows={4} defaultValue={localStorage.getItem(`sl:privkey:${appKeys?.id}`) || undefined} contentEditable={false}
-            onBlur={savePrivateKey} />
+          <Input.TextArea rows={10} value={appKeys?.private_key} contentEditable={false}
+            onChange={({ target }) => setAppKeys({ ...appKeys, private_key: target.value })} />
           <Typography.Paragraph type="secondary">
             <strong>Your private key will be saved in the client-side/browser only.</strong> For security concerns, developers can't even decrypt your data.
           </Typography.Paragraph>
