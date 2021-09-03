@@ -99,7 +99,7 @@ const Log: React.FC<Props> = ({ appId }) => {
         <Row gutter={16}>
           <Col lg={16} md={14} span={24}>
             <Typography.Paragraph>
-              <Input.Search placeholder="Search..." onSearch={search} enterButton allowClear  />
+              <Input.Search placeholder="Search... (support regex, eg: ^\!ERROR$)" onSearch={search} enterButton allowClear  />
             </Typography.Paragraph>
           </Col>
           <Col lg={8} md={10} span={24}>
@@ -121,20 +121,23 @@ const Log: React.FC<Props> = ({ appId }) => {
           </Col>
         </Row>
         <Divider />
-        <List loading={!logs && !error} size="small" dataSource={data}
-          renderItem={item => <List.Item onClick={() => setLog(item)} style={{ border: 'none', cursor: 'pointer', padding: 0 }}>
-            <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
-              <Tag color={item.type === 'error' ? 'red' : item.type === 'warn' ? 'orange' : 'default'}>
-                {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
-              </Tag>
-              <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
-                {item.log_data}
-              </Typography.Text>
-            </Typography.Paragraph>
-          </List.Item>} />
-        <Typography.Paragraph style={{ textAlign: 'center' }}>
-          <Button loading={!logs && !error} onClick={load}>load more</Button>
-        </Typography.Paragraph>
+        <Layout.Content style={{ height: '65vh', overflowY: 'auto'  }}>
+          <List loading={!logs && !error} size="small" dataSource={data}
+            renderItem={item => <List.Item onClick={() => setLog(item)} style={{ border: 'none', cursor: 'pointer', padding: 0 }}>
+              <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ wordBreak: 'break-all' }}>
+                <Tag color={item.type === 'error' ? 'red' : item.type === 'warn' ? 'orange' : 'default'}>
+                  {moment(item.created_at).format('MMM DD, HH:mm:ss.SSSZ')}
+                </Tag>
+                <Typography.Text type={item.type === 'error' ? 'danger' : item.type === 'warn' ? 'warning' : undefined}>
+                  {item.log_data}
+                </Typography.Text>
+              </Typography.Paragraph>
+            </List.Item>} />
+          <Divider />
+          <Typography.Paragraph style={{ textAlign: 'center' }}>
+            <Button loading={!logs && !error} onClick={load}>load more</Button>
+          </Typography.Paragraph>
+        </Layout.Content>
       </>}
     </Col>
     <Drawer width={1200} title={moment(log?.created_at).format('MMM DD, HH:mm:ss.SSSZ')} visible={log?.id} onClose={() => setLog(undefined)}>

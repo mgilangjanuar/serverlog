@@ -118,7 +118,7 @@ const Main: React.FC<Props> = ({ user }) => {
         <Form.Item name="description" label="Description">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label="Members">
+        {app?.id && app?.id !== 'create' ? <Form.Item label="Members">
           <Form.List name="uids" rules={[
             {
               validator: async (_, uids) => {
@@ -144,10 +144,10 @@ const Main: React.FC<Props> = ({ user }) => {
               </Form.Item>
             </>}
           </Form.List>
-        </Form.Item>
+        </Form.Item> : ''}
         <Form.Item style={{ textAlign: 'right' }} wrapperCol={{ span: 18 }}>
           <Space>
-            {app?.id !== 'create' ? <Popconfirm title="Are you sure?" onConfirm={() => remove(app)}>
+            {app?.id && app?.id !== 'create' ? <Popconfirm title="Are you sure?" onConfirm={() => remove(app)}>
               <Button danger>Remove</Button>
             </Popconfirm> : ''}
             <Button htmlType="submit" type="primary" loading={loading}>Save</Button>
@@ -158,11 +158,11 @@ const Main: React.FC<Props> = ({ user }) => {
     <Drawer title={`Keys of ${appKeys?.name}`} visible={appKeys?.id} onClose={() => setAppKeys(undefined)}>
       <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
         <Form.Item label={<>SDK Key&nbsp; <Tooltip placement="topLeft" title="Save this key for init the SDK"><QuestionCircleOutlined /></Tooltip></>}>
-          <Input.Search defaultValue={appKeys?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
+          <Input.Search value={appKeys?.key} contentEditable={false} enterButton={<CopyOutlined />} onSearch={copy} />
         </Form.Item>
         <Divider />
         <Form.Item label={<>Private Key&nbsp; <Tooltip placement="bottomLeft" title="It's used to decrypt your log data, please don't share this with anyone except members of this app."><WarningOutlined /></Tooltip></>}>
-          <Input.TextArea rows={10} value={appKeys?.private_key} contentEditable={false}
+          <Input.TextArea rows={6} value={appKeys?.private_key} contentEditable={false}
             onChange={({ target }) => setAppKeys({ ...appKeys, private_key: target.value })} />
           <Typography.Paragraph type="secondary">
             <strong>Your private key will be saved in the client-side/browser only.</strong> For security concerns, developers can't even decrypt your data.
