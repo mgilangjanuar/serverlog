@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.22.4",
+    "axios": "^0.21.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
