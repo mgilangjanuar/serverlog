@@ -69,8 +69,9 @@ const Home: React.FC = () => {
             </ul>
             <Typography.Title level={3}>Privacy Concern</Typography.Title>
             <Typography.Paragraph>
-              Your data will be encrypted with <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" target="_blank">RSA encryption</a> in the database. The system only saves the public key and you will get the private key after creating an application. The private key is saved only in the client-side/browser. <Typography.Text type="danger">⚠️ So, don't share the private key with anyone/any devices you don't trust.</Typography.Text>
+              Your data will be encrypted with <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" target="_blank">RSA encryption</a> in the database. The system only saves the public key and you will get the private key after creating an application. The private key is saved only in the client-side/browser to decrypt the data.
             </Typography.Paragraph>
+            <Typography.Paragraph type="danger">⚠️ So, don't share the private key with anyone/any devices you don't trust.</Typography.Paragraph>
           </div>
           <Image src="/Screen Shot 2021-09-03 at 13.33.58.png" alt="Screen Shot 2021-09-03 at 13.33.58.png" style={{ width: '100%' }} />
           <Divider />

@@ -18,7 +18,7 @@ const Navbar: React.FC<Props> = ({ user }) => {
   return <>
     <Layout.Header>
       <div style={{ cursor: 'pointer' }} onClick={e => e.preventDefault()} className="logo">
-        <Link to="/dashboard">server.log()</Link>
+        <Link to="/dashboard">ServerLog</Link>
       </div>
       {user ? <div style={{ float: 'right' }} className="logo">
         <Button onClick={logout} type="link" danger icon={<LogoutOutlined />} />
