@@ -1,5 +1,6 @@
 import { AES } from 'crypto-js'
 import { Request, Response } from 'express'
+import NodeRSA from 'node-rsa'
 import { Applications } from '../../model/Applications'
 import { Logs } from '../../model/Logs'
 import { Supabase } from '../../service/Supabase'
@@ -29,13 +30,15 @@ export class Application {
       throw { status: 400, body: { error: 'You reach the limit' } }
     }
 
+    const key = new NodeRSA()
     const { data: application } = await Supabase.build().from<Applications>('applications').insert([
       {
         ...data,
+        public_key: key.exportKey('public'),
         uids: [req.user.id]
       }
     ]).single()
-    return res.send({ application })
+    return res.send({ application, secret: key.exportKey('private') })
   }
 
   @Endpoint.PATCH('/:id', { middlewares: [JWTAuth()] })
