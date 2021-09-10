@@ -24,21 +24,25 @@ export class ServerLog {
 
   private static async _log(type: string, ...data: any[]): Promise<void> {
     if (this.KEY) {
-      axiosRetry(axios, {
-        retries: 10,
-        retryDelay: () => 5_000,
-        shouldResetTimeout: true
-      })
-      await axios.post(this.BASE_URL, {
-        type,
-        log_data: data.map(datum => {
-          let result = datum
-          if (typeof datum === 'object') {
-            result = JSON.stringify(serializeError(datum), null, 2)
-          }
-          return result
-        }).join(' ')
-      }, { params: { key: this.KEY } })
+      try {
+        axiosRetry(axios, {
+          retries: 10,
+          retryDelay: () => 5_000,
+          shouldResetTimeout: true
+        })
+        await axios.post(this.BASE_URL, {
+          type,
+          log_data: data.map(datum => {
+            let result = datum
+            if (typeof datum === 'object') {
+              result = JSON.stringify(serializeError(datum), null, 2)
+            }
+            return result
+          }).join(' ')
+        }, { params: { key: this.KEY } })
+      } catch (error) {
+        // ignore
+      }
     }
   }
 }
